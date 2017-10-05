@@ -1,4 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt_rt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<c:set var="lang" value="${pageContext.request.locale.language}"/>
+<fmt:setLocale value="${lang}_${fn:toUpperCase(lang)}"/>
+<fmt:setBundle basename="ua.messages" />
 
 <html>
 <head>
@@ -35,10 +41,11 @@
 </header>
 
 <body>
+<jsp:include page="message.jsp"/>
 <div id="login-form">
-    <h1>АВТОРИЗАЦИЯ</h1>
+    <h1>AUTHORIZATION</h1>
     <fieldset>
-        <form action="/controller" method="post">
+        <form action="/mainServlet?action=login" method="post">
             <input type="email" name="email" required value="Email" onBlur="if(this.value=='')this.value='Email'"
                    onFocus="if(this.value=='Email')this.value='' ">
             <input type="password" name="password" required value="Password" onBlur="if(this.value=='')this.value='Password'"

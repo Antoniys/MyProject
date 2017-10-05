@@ -5,8 +5,7 @@ import command.ExecuteStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class ReplanishAccountCommand extends DefaultHandler {
-
+public class PayCommand extends DefaultHandler {
     @Override
     public ExecuteStatus execute(HttpServletRequest request) {
         return null;

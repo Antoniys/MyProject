@@ -2,6 +2,8 @@ package dao.Connection;
 
 
 
+import org.apache.log4j.Logger;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -11,6 +13,7 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
    private static Connection connection = null;
+    private static final Logger logger = Logger.getLogger(ConnectionFactory.class);
 
     static {
         try {
@@ -18,10 +21,11 @@ public class ConnectionFactory {
             Context envContext  = (Context)initContext.lookup("java:/comp/env");
             DataSource ds = (DataSource)envContext.lookup("jdbc/my_payment_system");
             connection = ds.getConnection();
+
         } catch (NamingException e) {
-            e.printStackTrace();
+            logger.fatal("Naming exception  ");
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.warn("Removed bad connection ");
         }
     }
 

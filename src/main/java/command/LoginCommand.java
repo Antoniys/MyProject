@@ -1,36 +1,37 @@
 package command;
 
-import command.commandInterface.ActionCommand;
+import command.DefaultHandler;
+import command.ExecuteStatus;
 import dao.dao_realization.UserRealizationDAO;
+import model.Role;
 import model.User;
 import model.UserClient;
 
 
 import javax.servlet.http.HttpServletRequest;
 
-public class LoginCommand implements ActionCommand {
-    private static final String PARAM_NAME_LOGIN = "email";
-    private static final String PARAM_NAME_PASSWORD = "password";
+public class LoginCommand extends DefaultHandler {
+    public LoginCommand() {
+        action = "login";
+    }
 
     @Override
-    public String execute(HttpServletRequest request) {
-        String page = null;
-// извлечение из запроса логина и пароля
-        String login = request.getParameter(PARAM_NAME_LOGIN);
-        String pass = request.getParameter(PARAM_NAME_PASSWORD);
-// проверка логина и пароля
-        UserRealizationDAO userRealizationDAO = new UserRealizationDAO();
-        User user = userRealizationDAO.findUser(pass, login);
-        if (user != null) {
-            if (user instanceof UserClient) {
-                page = "jsp/menu.jsp";
-            } else {
-                page = "jsp/admin.jsp";
-            }
-        } else {
-            page = "jsp/error.jsp";
+    public ExecuteStatus execute(HttpServletRequest request) {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        UserRealizationDAO userRealizationDAO=new UserRealizationDAO();
+        User user = userRealizationDAO.getClientWithEmailAndPassword(email, password);
+        if (user != null && user.getRole()== Role.CLIENT) {
+            request.getSession().setAttribute("user", user);
+            return new ExecuteStatus(ExecuteStatus.OK, MENU_PAGE);
         }
-
-        return page;
+        else if(user != null && user.getRole()== Role.ADMIN){
+            request.getSession().setAttribute("user", user);
+            return new ExecuteStatus(ExecuteStatus.OK, MENU_PAGE);  //admin.jsp- пока нет
+        }
+        else {
+            return new ExecuteStatus(ExecuteStatus.FAIL, "wrong_login_data",
+                    LOGIN_PAGE, request.getLocale());
+        }
     }
 }

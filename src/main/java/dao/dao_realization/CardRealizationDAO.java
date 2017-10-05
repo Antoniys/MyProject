@@ -1,19 +1,18 @@
 package dao.dao_realization;
 
 import dao.Connection.ConnectionFactory;
-import dao.dao_interface.CardInterfaceDAO;
 import model.Card;
+import org.apache.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardRealizationDAO implements CardInterfaceDAO {
+public class CardRealizationDAO  {
+    private static final Logger logger = Logger.getLogger(AccountRealizationDAO.class);
 
-    @Override
     public List<Card> clientCards(int id_client) {
         List<Card> cards = new ArrayList<>();
         PreparedStatement preparedStatement = null;
@@ -35,7 +34,7 @@ public class CardRealizationDAO implements CardInterfaceDAO {
                 try {
                     preparedStatement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error("Can't get statement or execute query " + e.getMessage());
                 }
             }
         }
@@ -53,7 +52,7 @@ public class CardRealizationDAO implements CardInterfaceDAO {
             card.setId_account(resultSet.getInt(3));
             return card.getId_account();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Can't get statement or execute query " + e.getMessage());
         }
         return 0;
     }
